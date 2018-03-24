@@ -1,0 +1,13 @@
+* {
+  box-sizing: border-box;
+}
+.App {
+  width: 720px;
+  margin: 0 auto;
+}
+
+.markets-container {
+  display: grid;
+  grid-template-columns: repeat(8, 70px);
+  grid-gap: 4px 6px;
+}

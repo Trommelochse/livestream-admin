@@ -1,0 +1,16 @@
+.MarketItem {
+  font-size: 12px;
+  padding: 8px 6px;
+  text-transform: uppercase;
+  background-color: #3090c3;
+  color: #fff;
+  cursor: pointer;
+}
+
+.MarketItem:hover {
+  opacity: 0.8;
+}
+
+.MarketItem.active {
+  background-color: #65ab10;
+}
