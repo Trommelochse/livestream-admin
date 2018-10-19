@@ -5,46 +5,62 @@ class LeagueItem extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      hasChanged: false
+    };
   }
 
   handleSubmit(ev) {
     ev.preventDefault();
-    const updatedData = {}
+    const updatedData = {};
     updatedData.priority = this.state.priority || this.props.priority;
-    updatedData.active = this.state.active || this.props.active;
     this.props.onUpdate(this.props.id, updatedData);
+    this.setState({hasChanged: false});
   }
 
-  onToggleActive() {
-    const active = this.state.active ?
-      false : this.props.active ?
-        false : true;
-    this.setState({active})
+  onDelete() {
+    this.props.onDelete(this.props)
+  }
+
+  onChangePriority(ev) {
+    this.setState({
+      priority: parseInt(ev.target.value, 10),
+      hasChanged: true
+    });
   }
 
   render() {
     return (
       <div className="LeagueItem">
-        <input
-          defaultChecked={this.props.active}
-          type="checkbox"
-          className="toggle-status"
-          onChange={this.onToggleActive.bind(this)}
-        />
-        <div className="title">{ this.props.name }</div>
+        <div className="title">
+          <span>{this.props.name}</span>
+          <span className="info">{this.props.sport} - {this.props.scid}</span>
+        </div>
         <form
           className="controls"
           onSubmit={ev => this.handleSubmit(ev)}
           >
-          <label>Priority</label>
+          <div>
+            <label>Priority</label>
+            <input
+              type="number"
+              defaultValue={this.props.priority}
+              onChange={this.onChangePriority.bind(this)}
+            />  
+          </div>
           <input
-            type="number"
-            defaultValue={this.props.priority}
-            onChange={ev => this.setState({priority: parseInt(ev.target.value, 10)})}
+            className="update"
+            type="submit"
+            value="Update"
+            disabled={!this.state.hasChanged}
           />
-          <input type="submit" value="Update"/>
       </form>
+      <button
+        className="danger"
+        onClick={this.onDelete.bind(this)}
+        >
+        x
+      </button>
       </div>
     );
   }

@@ -8,4 +8,4 @@ export default props => (
   >
     <span>{props.market}</span>
   </div>
-)
+);

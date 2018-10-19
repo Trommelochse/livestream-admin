@@ -1,16 +1,33 @@
 .MarketItem {
-  font-size: 12px;
   padding: 8px 6px;
   text-transform: uppercase;
-  background-color: #3090c3;
   color: #fff;
+  background: rgba(255,255,255,0.1);
   cursor: pointer;
+  font-size: 15px;
+  text-align: center;
+  opacity: 0.5;
 }
 
-.MarketItem:hover {
-  opacity: 0.8;
+.MarketItem span {
+  font-weight: 700;
 }
 
 .MarketItem.active {
-  background-color: #65ab10;
+  opacity: 1;
+  color: #f1c40f;
+  border: 1px dashed #f1c40f;
+  background: rgba(255,255,255,0.166)
+}
+
+.MarketItem:not(.active):not(label):hover {
+  opacity: 0.8215;
+}
+
+label.MarketItem {
+  opacity: 0.85;
+  font-size: 12px;
+  font-family: monospace;
+  pointer-events: none;
+  background-color: transparent;
 }

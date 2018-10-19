@@ -13,7 +13,7 @@ class App extends Component {
     super();
     this.state = {
       leagues: [],
-      leagueInput: '',
+      newLeagueInput: 0,
       markets: ['en', 'sv', 'no', 'fi'],
       activeMarket: 'en',
       errMsg: ''
@@ -21,7 +21,7 @@ class App extends Component {
   }
 
   componentWillMount() {
-    this.unsubscribeLeauges =
+    this.unsubscribeLeagues =
       db.collection('leagues').onSnapshot(snap => {
         const leagues = [];
         snap.forEach(docSnap => {
@@ -33,18 +33,17 @@ class App extends Component {
       })
   }
 
-  onLeagueInput(ev) {
-    this.setState({leagueInput: ev.target.value});
-  }
-
   addLeague() {
-    const {leagueInput} = this.state;
-    isa.leagueInfo(leagueInput)
+    const {newLeagueInput} = this.state;
+    if (!newLeagueInput || isNaN(newLeagueInput)) {
+      this.setState({errMsg: 'Invalid Input', newLeagueInput: '0'});
+    }
+    isa.leagueInfo(newLeagueInput)
       .then(res => res.json())
-      .then(res => this.saveLeague(res.el[0]));
+      .then(res => this.saveNewLeague(res.el[0]));
   }
 
-  saveLeague(match) {
+  saveNewLeague(match) {
     if (match) {
       const newLeague = {};
       newLeague.name = match.scn;
@@ -52,37 +51,57 @@ class App extends Component {
       newLeague.scid = match.sci;
       newLeague.market = this.state.activeMarket || 'en';
       newLeague.priority = 1;
-      newLeague.active = false;
       db.collection('leagues')
         .add(newLeague)
         .then(docSnap => {
-          this.setState({errMsg: '', leagueInput: ''})
+          this.setState({errMsg: '', newLeagueInput: '0'});
         })
-        .catch(err => console.log(err))
+        .catch(err => console.log(err));
     }
     else {
-      this.setState({errMsg: 'Can currently not retrieve information for league'})
+      this.setState({errMsg: 'Can currently not retrieve information for league'});
+    }
+  }
+
+  handleLeagueDelete(league) {
+    const confirmed = window.confirm(`Are you sure you want to delete ${league.name}`);
+    if (confirmed) {
+      db.collection('leagues').doc(league.id)
+        .delete()
+        .then(() => console.log('league deleted'))
+        .catch(err => console.error(err))
     }
   }
 
   handleMarketChange(market) {
-    this.setState({activeMarket: market})
+    this.setState({activeMarket: market});
   }
 
   handleLeagueUpdate(id, updates) {
     if (id && updates) {
-      db.collection('leagues').doc(id).set(updates, {merge: true})
+      db.collection('leagues').doc(id).set(updates, {merge: true});
+    }
+  }
+
+  handleNewLeagueInput(ev) {
+    const val = parseInt(ev.target.value, 10);
+    if (isNaN(val)) {
+      this.setState({newLeagueInput: ''});
+    }
+    else {
+      this.setState({newLeagueInput: Math.abs(val)});
     }
   }
 
   componentWillUnmount() {
-    this.unsubscribeLeauges()
+    this.unsubscribeLeagues();
   }
 
   render() {
     return (
       <div className="App">
         <div className="markets-container">
+        <label className="MarketItem">Market:</label>
         {
           this.state.markets.map(market => {
             return (
@@ -96,6 +115,9 @@ class App extends Component {
           })
         }
         </div>
+        <h3 className="leagues-container-heading">
+          Active Leagues
+        </h3>
         <div className="leagues-container">
         {
           this.state.leagues
@@ -105,6 +127,7 @@ class App extends Component {
             return (
               <LeagueItem
                 onUpdate={this.handleLeagueUpdate.bind(this)}
+                onDelete={this.handleLeagueDelete.bind(this)}
                 key={league.id}
                 {...league}
               />
@@ -114,9 +137,12 @@ class App extends Component {
         </div>
         <button onClick={() => this.addLeague()}>Add league</button>
         <input
-          value={this.state.leagueInput}
-          onChange={ev=> this.setState({leagueInput: ev.target.value})}>
+          type="number"
+          value={(this.state.newLeagueInput)}
+          onChange={this.handleNewLeagueInput.bind(this)}
+          >
         </input>
+        <p>{this.state.errMsg}</p>
       </div>
     );
   }

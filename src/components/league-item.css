@@ -1,12 +1,13 @@
 .LeagueItem {
-  --padding: 6px 10px;
-  font-size: 12px;
-  width: 500px;
+  --padding: 10px 20px;
+  background-color: #fff;
+  font-size: 14px;
   padding: var(--padding);
-  margin-bottom: 12px;
+  margin-bottom: 4px;
   display: grid;
-  grid-template-columns: 25px 2fr 1fr;
-  box-shadow: 2px 3px 4px rgba(0,0,0,0.11), 3px 1px 6px rgba(0,0,0,0.07);
+  grid-template-columns: 2fr 1fr 50px;
+  grid-gap: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
 
 .LeagueItem .title {
@@ -14,17 +15,47 @@
   font-weight: 700;
 }
 
+.LeagueItem .title .info {
+  margin-left: 20px;
+  font-size: 8px;
+  color: #999;
+  text-transform: uppercase;
+}
+
+.LeagueItem button.danger {
+  border: none;
+  padding: 0;
+  font-size: 18px;
+  background-color: #dd6969;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+}
+
+
 .LeagueItem .controls {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 80px 1fr;
 }
 
 .LeagueItem .controls label {
-  padding: var(--padding);
+  display: block;
   font-size: 12px;
   color: #a9a9a9;
 }
 
 .LeagueItem .controls input[type="number"] {
-  width: 50px;
+  width: 60px;
 }
+
+.LeagueItem .controls input[type="submit"] {
+  border: none;
+  border-radius: 10px;
+}
+
+.LeagueItem .controls input[type="submit"]:not([disabled]) {
+  background-color: #27ae60;
+  color: #fff;
+  cursor: pointer;
+}
+
