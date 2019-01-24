@@ -1,2 +1,2 @@
 # LivestreamAdmin
-This app enables the user to access and manipulate a certain set of data.
+This ReactJS application is created for a specific group of users. It enables them to access and manipulate data of interest stored on Google Firebase. 
